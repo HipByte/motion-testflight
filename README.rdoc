@@ -1,18 +1,18 @@
-== motion-testflight
+= motion-testflight
 
 motion-testflight allows RubyMotion projects to easily embed the TestFlight
 SDK and be submitted to the TestFlight platform.
 
-=== Requirements
+== Requirements
 
 * RubyMotion 1.0 or greater (see http://www.rubymotion.com).
 * A TestFlight account, can be obtained for free at http://testflightapp.com.
 
-=== Installation
+== Installation
 
   $ sudo gem install motion-testflight
 
-=== Setup
+== Setup
 
 1. Download the TestFlight SDK package from https://testflightapp.com/sdk/download/ and unpack it into the +vendor/TestFlightSDK+ directory of your RubyMotion project. Create the +vendor+ directory if it does not exist. You should have something like this.
 
@@ -42,13 +42,13 @@ SDK and be submitted to the TestFlight platform.
        app.testflight.distribution_lists = ['CoolKids']
      end
 
-=== Usage
+== Usage
 
 motion-testflight introduces a +testflight+ Rake task to your project, which can be used to submit a development build. The +notes+ parameter must be provided, and its content will be used as the submission release notes.
 
   $ rake testflight notes="zomg!"
 
-=== License
+== License
 
   Copyright (c) 2012, Laurent Sansonetti <lrz@hipbyte.com>
   All rights reserved.
