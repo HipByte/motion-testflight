@@ -1,0 +1,74 @@
+== motion-testflight
+
+motion-testflight allows RubyMotion projects to easily embed the TestFlight
+SDK and be submitted to the TestFlight platform.
+
+=== Requirements
+
+* RubyMotion 1.0 or greater (see http://www.rubymotion.com).
+* A TestFlight account, can be obtained for free at http://testflightapp.com.
+
+=== Installation
+
+  $ sudo gem install motion-testflight
+
+=== Setup
+
+1. Download the TestFlight SDK package from https://testflightapp.com/sdk/download/ and unpack it into the `vendor/TestFlightSDK' directory of your RubyMotion project. Create the `vendor' directory if it does not exist. You should have something like this.
+
+  $ ls vendor/TestFlightSDK
+  README.txt			libTestFlight.a
+  TestFlight.h			release_notes.txt
+
+2. Edit the Rakefile of your RubyMotion project and add the following require line.
+
+  require 'motion/project/testflight'
+
+3. Still in the Rakefile, set up the following variables in your application configuration block.
+
+  Motion::Project::App.setup do |app|
+    # ...
+    app.testflight.sdk = 'vendor/TestFlight'
+    app.testflight.api_token = '<insert your API token here>'
+    app.testflight.team_token = '<insert your team token here>'
+  end
+
+You can retrieve your API and team tokens from your TestFlight account page.
+
+4. (Optional) You can also set up distribution lists, if needed.
+
+  Motion::Project::App.setup do |app|
+    # ...
+    app.testflight.distribution_lists = ['CoolKids']
+  end
+
+=== Usage
+
+motion-testflight introduces a `testflight' Rake task to your project, which can be used to submit a development build. The `notes' parameter must be provided, and its content will be used as the submission release notes.
+
+  $ rake testflight notes="zomg!"
+
+=== License
+
+Copyright (c) 2012, Laurent Sansonetti <lrz@hipbyte.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met: 
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer. 
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
