@@ -38,6 +38,8 @@ class TestFlightConfig
       @config.unvendor_project(@sdk)
       @sdk = sdk
       @config.vendor_project(sdk, :static)
+      libz = '/usr/lib/libz.dylib'
+      @config.libs << libz unless @config.libs.index(libz) 
     end
   end
 
