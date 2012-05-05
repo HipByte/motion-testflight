@@ -1,6 +1,6 @@
 require 'rake/gempackagetask'
 
-Version = 1.0
+Version = 1.1
 
 GemSpec = Gem::Specification.new do |spec|
   spec.name = 'motion-testflight'
