@@ -20,8 +20,9 @@ SDK and be submitted to the TestFlight platform.
      README.txt			libTestFlight.a
      TestFlight.h			release_notes.txt
 
-2. Edit the +Rakefile+ of your RubyMotion project and add the following require line.
+2. Edit the +Rakefile+ of your RubyMotion project and add the following require lines.
 
+     require 'rubygems'
      require 'motion-testflight'
 
 3. Still in the +Rakefile+, set up the +sdk+, +api_token+ and +team_token+ variables in your application configuration block.
