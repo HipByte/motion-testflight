@@ -83,8 +83,8 @@ module Motion; module Project; class Config
 end; end; end
 
 namespace 'testflight' do
-  desc "Submit a development archive to TestFlight"
-  task :submit => 'archive:development' do
+  desc "Submit an archive to TestFlight"
+  task :submit => 'archive' do
     # Retrieve configuration settings.
     prefs = App.config.testflight
     App.fail "A value for app.testflight.api_token is mandatory" unless prefs.api_token
