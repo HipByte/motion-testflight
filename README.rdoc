@@ -29,9 +29,15 @@ SDK and be submitted to the TestFlight platform.
 
      Motion::Project::App.setup do |app|
        # ...
-       app.testflight.sdk = 'vendor/TestFlight'
-       app.testflight.api_token = '<insert your API token here>'
-       app.testflight.team_token = '<insert your team token here>'
+       app.development do
+         # ...
+         app.testflight do
+           app.testflight.sdk = 'vendor/TestFlight'
+           app.testflight.api_token = '<insert your API token here>'
+           app.testflight.team_token = '<insert your team token here>'
+           app.testflight.notify = true # default is false
+         end
+       end
      end
 
    You can retrieve the values for +api_token+ and +team_token+ in your TestFlight account page.
