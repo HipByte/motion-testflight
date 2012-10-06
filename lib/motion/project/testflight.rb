@@ -82,7 +82,7 @@ module Motion; module Project; class Config
 
   def testflight
     @testflight ||= TestFlightConfig.new(self)
-    yield if block_given? && testflight?
+    yield @testflight if block_given? && testflight?
     @testflight
   end
 
