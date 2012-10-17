@@ -69,7 +69,7 @@ EOF
     if !File.exist?(launcher_file) or File.read(launcher_file) != launcher_code
       File.open(launcher_file, 'w') { |io| io.write(launcher_code) }
     end
-    files = @config.files
+    files = @config.files.flatten
     files << launcher_file unless files.find { |x| File.expand_path(x) == File.expand_path(launcher_file) }
   end
 end
