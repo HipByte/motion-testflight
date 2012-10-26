@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-Version = "1.3"
+Version = "1.4"
 
 Gem::Specification.new do |spec|
   spec.name = 'motion-testflight'
