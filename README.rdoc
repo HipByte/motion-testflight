@@ -42,6 +42,15 @@ SDK and be submitted to the TestFlight platform.
 
    You can retrieve the values for +api_token+ and +team_token+ in your TestFlight account page.
 
+   If you're using Testflight 1.2 or above, you should also add the app_token.
+  
+      # ...
+      app.testflight do
+        # ...
+
+        app.testflight.app_token = '<insert your APP token here>'
+      end
+
 4. (Optional) You can also set up distribution lists, if needed.
 
      Motion::Project::App.setup do |app|
