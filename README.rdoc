@@ -36,6 +36,7 @@ SDK and be submitted to the TestFlight platform.
            app.testflight.api_token = '<insert your API token here>'
            app.testflight.team_token = '<insert your team token here>'
            app.testflight.notify = true # default is false
+           app.testflight.identify_testers = true # default is false
          end
        end
      end

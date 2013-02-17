@@ -27,7 +27,7 @@ unless defined?(Motion::Project::Config)
 end
 
 class TestFlightConfig
-  attr_accessor :sdk, :api_token, :team_token, :app_token, :distribution_lists, :notify
+  attr_accessor :sdk, :api_token, :team_token, :app_token, :distribution_lists, :notify, :identify_testers
 
   def initialize(config)
     @config = config
@@ -53,6 +53,11 @@ class TestFlightConfig
     create_launcher if team_token
   end
 
+  def identify_testers=(identify_testers)
+    @identify_testers = identify_testers
+    create_launcher
+  end
+
   def inspect
     {:sdk => sdk, :api_token => api_token, :team_token => team_token, :app_token => app_token, :distribution_lists => distribution_lists}.inspect
   end
@@ -66,6 +71,7 @@ class TestFlightConfig
 
 if Object.const_defined?('TestFlight') and !UIDevice.currentDevice.model.include?('Simulator')
   NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, object:nil, queue:nil, usingBlock:lambda do |notification|
+  #{'TestFlight.setDeviceIdentifier(UIDevice.currentDevice.uniqueIdentifier)' if identify_testers}
   TestFlight.takeOff('#{app_token || team_token}')
   end)
 end
