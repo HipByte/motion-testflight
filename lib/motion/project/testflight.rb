@@ -23,7 +23,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 unless defined?(Motion::Project::Config)
-  raise "This file must be required within a RubyMotion project Rakefile."
+  raise 'This file must be required within a RubyMotion project Rakefile.'
 end
 
 class TestFlightConfig
@@ -85,7 +85,7 @@ EOF
   end
 end
 
-module Motion; module Project; class Config
+module Motionmodule Project; class Config
 
   attr_accessor :testflight_mode
 
@@ -104,20 +104,20 @@ module Motion; module Project; class Config
 end; end; end
 
 namespace 'testflight' do
-  desc "Submit an archive to TestFlight"
+  desc 'Submit an archive to TestFlight'
   task :submit do
 
     App.config_without_setup.testflight_mode = true
 
     # Retrieve configuration settings.
     prefs = App.config.testflight
-    App.fail "A value for app.testflight.api_token is mandatory" unless prefs.api_token
-    App.fail "A value for app.testflight.team_token is mandatory" unless prefs.team_token
+    App.fail 'A value for app.testflight.api_token is mandatory' unless prefs.api_token
+    App.fail 'A value for app.testflight.team_token is mandatory' unless prefs.team_token
     distribution_lists = (prefs.distribution_lists ? prefs.distribution_lists.join(',') : nil)
     notes = ENV['notes']
     App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
 
-    Rake::Task["archive"].invoke
+    Rake::Task['archive'].invoke
 
     # An archived version of the .dSYM bundle is needed.
     app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
@@ -128,15 +128,15 @@ namespace 'testflight' do
       end
     end
 
-    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? "True" : "False"}"
+    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? 'True' : 'False'}"
     curl << " -F distribution_lists='#{distribution_lists}'" if distribution_lists
     App.info 'Run', curl
     sh curl
   end
 
-  desc "Records if the device build is created in testflight mode, so some things can be cleaned up between mode switches"
+  desc 'Records if the device build is created in testflight mode, so some things can be cleaned up between mode switches'
   task :record_mode do
-    testflight_mode = App.config_without_setup.testflight_mode ? "True" : "False"
+    testflight_mode = App.config_without_setup.testflight_mode ? 'True' : 'False'
 
     platform = 'iPhoneOS'
     bundle_path = App.config.app_bundle(platform)
@@ -144,12 +144,12 @@ namespace 'testflight' do
     FileUtils.mkdir_p(build_dir)
     previous_testflight_mode_file = File.join(build_dir, '.testflight_mode')
 
-    previous_testflight_mode = "False"
+    previous_testflight_mode = 'False'
     if File.exist?(previous_testflight_mode_file)
       previous_testflight_mode = File.read(previous_testflight_mode_file).strip
     end
     if previous_testflight_mode != testflight_mode
-      App.info "Testflight", "Cleaning executable, Info.plist, and PkgInfo for mode change (was: #{previous_testflight_mode}, now: #{testflight_mode})"
+      App.info 'Testflight', "Cleaning executable, Info.plist, and PkgInfo for mode change (was: #{previous_testflight_mode}, now: #{testflight_mode})"
       [
         App.config.app_bundle_executable(platform), # main_exec
         File.join(bundle_path, 'Info.plist'), # bundle_info_plist
