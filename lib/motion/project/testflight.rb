@@ -1,15 +1,15 @@
 # Copyright (c) 2012, Laurent Sansonetti <lrz@hipbyte.com>
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright notice,
 #    this list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -23,7 +23,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 unless defined?(Motion::Project::Config)
-  raise "This file must be required within a RubyMotion project Rakefile."
+  raise 'This file must be required within a RubyMotion project Rakefile.'
 end
 
 class TestFlightConfig
@@ -39,7 +39,7 @@ class TestFlightConfig
       @sdk = sdk
       @config.vendor_project(sdk, :static)
       libz = '/usr/lib/libz.dylib'
-      @config.libs << libz unless @config.libs.index(libz) 
+      @config.libs << libz unless @config.libs.index(libz)
     end
   end
 
@@ -71,7 +71,7 @@ class TestFlightConfig
 
 if Object.const_defined?('TestFlight') and !UIDevice.currentDevice.model.include?('Simulator')
   NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, object:nil, queue:nil, usingBlock:lambda do |notification|
-  #{'TestFlight.setDeviceIdentifier(UIDevice.currentDevice.uniqueIdentifier)' if identify_testers}
+#{'  TestFlight.setDeviceIdentifier(UIDevice.currentDevice.uniqueIdentifier)' if identify_testers}
   TestFlight.takeOff('#{app_token || team_token}')
   end)
 end
@@ -85,7 +85,7 @@ EOF
   end
 end
 
-module Motion; module Project; class Config
+module Motionmodule Project; class Config
 
   attr_accessor :testflight_mode
 
@@ -104,21 +104,21 @@ module Motion; module Project; class Config
 end; end; end
 
 namespace 'testflight' do
-  desc "Submit an archive to TestFlight"
+  desc 'Submit an archive to TestFlight'
   task :submit do
 
     App.config_without_setup.testflight_mode = true
 
     # Retrieve configuration settings.
     prefs = App.config.testflight
-    App.fail "A value for app.testflight.api_token is mandatory" unless prefs.api_token
-    App.fail "A value for app.testflight.team_token is mandatory" unless prefs.team_token
+    App.fail 'A value for app.testflight.api_token is mandatory' unless prefs.api_token
+    App.fail 'A value for app.testflight.team_token is mandatory' unless prefs.team_token
     distribution_lists = (prefs.distribution_lists ? prefs.distribution_lists.join(',') : nil)
     notes = ENV['notes']
     App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
 
-    Rake::Task["archive"].invoke
-  
+    Rake::Task['archive'].invoke
+
     # An archived version of the .dSYM bundle is needed.
     app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
     app_dsym_zip = app_dsym + '.zip'
@@ -126,17 +126,17 @@ namespace 'testflight' do
       Dir.chdir(File.dirname(app_dsym)) do
         sh "/usr/bin/zip -q -r \"#{File.basename(app_dsym)}.zip\" \"#{File.basename(app_dsym)}\""
       end
-    end  
-  
-    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? "True" : "False"}"
+    end
+
+    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? 'True' : 'False'}"
     curl << " -F distribution_lists='#{distribution_lists}'" if distribution_lists
     App.info 'Run', curl
     sh curl
   end
 
-  desc "Records if the device build is created in testflight mode, so some things can be cleaned up between mode switches"
+  desc 'Records if the device build is created in testflight mode, so some things can be cleaned up between mode switches'
   task :record_mode do
-    testflight_mode = App.config_without_setup.testflight_mode ? "True" : "False"
+    testflight_mode = App.config_without_setup.testflight_mode ? 'True' : 'False'
 
     platform = 'iPhoneOS'
     bundle_path = App.config.app_bundle(platform)
@@ -144,12 +144,12 @@ namespace 'testflight' do
     FileUtils.mkdir_p(build_dir)
     previous_testflight_mode_file = File.join(build_dir, '.testflight_mode')
 
-    previous_testflight_mode = "False"
+    previous_testflight_mode = 'False'
     if File.exist?(previous_testflight_mode_file)
       previous_testflight_mode = File.read(previous_testflight_mode_file).strip
     end
     if previous_testflight_mode != testflight_mode
-      App.info "Testflight", "Cleaning executable, Info.plist, and PkgInfo for mode change (was: #{previous_testflight_mode}, now: #{testflight_mode})"
+      App.info 'Testflight', "Cleaning executable, Info.plist, and PkgInfo for mode change (was: #{previous_testflight_mode}, now: #{testflight_mode})"
       [
         App.config.app_bundle_executable(platform), # main_exec
         File.join(bundle_path, 'Info.plist'), # bundle_info_plist
