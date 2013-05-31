@@ -48,7 +48,6 @@ SDK and be submitted to the TestFlight platform.
       # ...
       app.testflight do
         # ...
-
         app.testflight.app_token = '<insert your APP token here>'
       end
 
