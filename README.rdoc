@@ -32,7 +32,7 @@ SDK and be submitted to the TestFlight platform.
        app.development do
          # ...
          app.testflight do
-           app.testflight.sdk = 'vendor/TestFlight'
+           app.testflight.sdk = 'vendor/TestFlightSDK'
            app.testflight.api_token = '<insert your API token here>'
            app.testflight.team_token = '<insert your team token here>'
            app.testflight.notify = true # default is false
@@ -48,7 +48,6 @@ SDK and be submitted to the TestFlight platform.
       # ...
       app.testflight do
         # ...
-
         app.testflight.app_token = '<insert your APP token here>'
       end
 
