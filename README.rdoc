@@ -41,6 +41,7 @@ SDK and be submitted to the TestFlight platform.
        end
      end
 
+
    You can retrieve the values for +api_token+ and +team_token+ in your TestFlight account page.
 
    If you're using Testflight 1.2 or above, you should also add the app_token.
