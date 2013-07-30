@@ -51,7 +51,17 @@ SDK and be submitted to the TestFlight platform.
         app.testflight.app_token = '<insert your APP token here>'
       end
 
-4. (Optional) You can also set up distribution lists, if needed.
+4. Set the appropriate code signing certificate, provisioning profile and entitlements for ad hoc distribution.
+
+      # ...
+      app.testflight do
+        # ...
+        app.provisioning_profile = '</path/to/adhoc/distribution/profile.mobileprovision>'
+        app.codesign_certificate = 'iPhone Distribution: <name> (<random digits>)'
+        app.entitlements['get-task-allow'] = false
+      end
+
+5. (Optional) You can also set up distribution lists, if needed.
 
      Motion::Project::App.setup do |app|
        # ...
