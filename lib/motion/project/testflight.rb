@@ -117,7 +117,7 @@ namespace 'testflight' do
     notes = ENV['notes']
     App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
 
-    Rake::Task["archive"].invoke
+    Rake::Task["archive:distribution"].invoke
   
     # An archived version of the .dSYM bundle is needed.
     app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
