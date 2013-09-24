@@ -116,6 +116,8 @@ namespace 'testflight' do
     distribution_lists = (prefs.distribution_lists ? prefs.distribution_lists.join(',') : nil)
     notes = ENV['notes']
     App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
+    
+    prefs.notify = true if ENV['notify']
 
     Rake::Task["archive"].invoke
   
