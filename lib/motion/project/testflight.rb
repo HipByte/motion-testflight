@@ -27,7 +27,7 @@ unless defined?(Motion::Project::Config)
 end
 
 class TestFlightConfig
-  attr_accessor :sdk, :api_token, :team_token, :app_token, :distribution_lists, :notify, :identify_testers
+  attr_accessor :sdk, :api_token, :team_token, :app_token, :distribution_lists, :replace, :notify, :identify_testers
 
   def initialize(config)
     @config = config
@@ -130,6 +130,35 @@ namespace 'testflight' do
   
     curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? "True" : "False"}"
     curl << " -F distribution_lists='#{distribution_lists}'" if distribution_lists
+    App.info 'Run', curl
+    sh curl
+  end
+
+  desc "Submit a distribution archive to TestFlight"
+  task :distribute do
+
+    App.config_without_setup.testflight_mode = true
+
+    # Retrieve configuration settings.
+    prefs = App.config.testflight
+    App.fail "A value for app.testflight.api_token is mandatory" unless prefs.api_token
+    App.fail "A value for app.testflight.team_token is mandatory" unless prefs.team_token
+    notes = ENV['notes']
+    App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
+
+    # Don't recreate an archive as we want to upload the exact same build on the App Store and on TestFlight
+    #Rake::Task["archive:distribution"].invoke
+  
+    # An archived version of the .dSYM bundle is needed.
+    app_dsym = App.config.app_bundle('iPhoneOS').sub(/Development/, 'Release').sub(/\.app$/, '.dSYM')
+    app_dsym_zip = app_dsym + '.zip'
+    if !File.exist?(app_dsym_zip) or File.mtime(app_dsym) > File.mtime(app_dsym_zip)
+      Dir.chdir(File.dirname(app_dsym)) do
+        sh "/usr/bin/zip -q -r \"#{File.basename(app_dsym)}.zip\" \"#{File.basename(app_dsym)}\""
+      end
+    end  
+  
+    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive.sub(/Development/, 'Release')}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F replace=#{prefs.replace ? 'True' : 'False'} -F notify=#{prefs.notify ? 'True' : 'False'}"
     App.info 'Run', curl
     sh curl
   end
