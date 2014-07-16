@@ -120,7 +120,7 @@ namespace 'testflight' do
     Rake::Task["archive"].invoke
   
     # An archived version of the .dSYM bundle is needed.
-    app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
+    app_dsym = App.config.app_bundle_dsym('iPhoneOS')
     app_dsym_zip = app_dsym + '.zip'
     if !File.exist?(app_dsym_zip) or File.mtime(app_dsym) > File.mtime(app_dsym_zip)
       Dir.chdir(File.dirname(app_dsym)) do
