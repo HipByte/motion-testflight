@@ -1,15 +1,15 @@
 # Copyright (c) 2012, Laurent Sansonetti <lrz@hipbyte.com>
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright notice,
 #    this list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,7 +39,7 @@ class TestFlightConfig
       @sdk = sdk
       @config.vendor_project(sdk, :static)
       libz = '/usr/lib/libz.dylib'
-      @config.libs << libz unless @config.libs.index(libz) 
+      @config.libs << libz unless @config.libs.index(libz)
     end
   end
 
@@ -72,6 +72,7 @@ class TestFlightConfig
 if Object.const_defined?('TestFlight') and !UIDevice.currentDevice.model.include?('Simulator')
   NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidFinishLaunchingNotification, object:nil, queue:nil, usingBlock:lambda do |notification|
   #{'TestFlight.setDeviceIdentifier(UIDevice.currentDevice.uniqueIdentifier)' if identify_testers}
+  TestFlight.setOptions({ TFOptionReportCrashes => false})
   TestFlight.takeOff('#{app_token || team_token}')
   end)
 end
@@ -118,7 +119,7 @@ namespace 'testflight' do
     App.fail "Submission notes must be provided via the `notes' environment variable. Example: rake testflight notes='w00t'" unless notes
 
     Rake::Task["archive"].invoke
-  
+
     # An archived version of the .dSYM bundle is needed.
     app_dsym = App.config.app_bundle_dsym('iPhoneOS')
     app_dsym_zip = app_dsym + '.zip'
@@ -126,10 +127,11 @@ namespace 'testflight' do
       Dir.chdir(File.dirname(app_dsym)) do
         sh "/usr/bin/zip -q -r \"#{File.basename(app_dsym)}.zip\" \"#{File.basename(app_dsym)}\""
       end
-    end  
-  
-    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? "True" : "False"}"
+    end
+
+    curl = "/usr/bin/curl http://testflightapp.com/api/builds.json --progress-bar -F file=@\"#{App.config.archive}\" -F dsym=@\"#{app_dsym_zip}\" -F api_token='#{prefs.api_token}' -F team_token='#{prefs.team_token}' -F notes=\"#{notes}\" -F notify=#{prefs.notify ? "True" : "False"}"
     curl << " -F distribution_lists='#{distribution_lists}'" if distribution_lists
+    curl << " | tee"
     App.info 'Run', curl
     sh curl
   end
