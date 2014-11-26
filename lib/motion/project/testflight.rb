@@ -72,6 +72,7 @@ class TestFlightConfig
 if Object.const_defined?('TestFlight') and !UIDevice.currentDevice.model.include?('Simulator')
   NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidFinishLaunchingNotification, object:nil, queue:nil, usingBlock:lambda do |notification|
   #{'TestFlight.setDeviceIdentifier(UIDevice.currentDevice.uniqueIdentifier)' if identify_testers}
+  TestFlight.setOptions({ TFOptionReportCrashes => false})
   TestFlight.takeOff('#{app_token || team_token}')
   end)
 end
